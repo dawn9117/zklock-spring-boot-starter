@@ -10,10 +10,10 @@ import org.apache.commons.lang3.BooleanUtils;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
 import org.apache.curator.retry.RetryNTimes;
-import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
 import java.lang.reflect.Constructor;
 
 /**
@@ -21,22 +21,18 @@ import java.lang.reflect.Constructor;
  */
 @Slf4j
 @Getter
-@Component
 public class LockHelper {
 
 	/**
 	 * ZK配置类
 	 */
+	@Resource
 	private ZkConfig zkConfig;
 
 	/**
 	 * zk 客户端
 	 **/
 	private CuratorFramework client;
-
-	public LockHelper(ZkConfig zkConfig) {
-		this.zkConfig = zkConfig;
-	}
 
 	@PostConstruct
 	public void init() {
@@ -52,8 +48,6 @@ public class LockHelper {
 		client.start();
 		log.info("[ZkDistributeLockFactoryImpl] 初始化zk客户端成功");
 	}
-
-	private static final String LOCK_NAME_PREFIX = "distribute-lock-%s-%s-%s";
 
 	/**
 	 * 获取分布式锁(默认zk不可重入共享锁)

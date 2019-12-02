@@ -8,7 +8,7 @@ import java.util.concurrent.TimeUnit;
  * @author he.bo
  * @created 2019-11-28 14:27
  */
-public interface DistributeLock extends AutoCloseable {
+public interface DistributeLock {
 
 	/**
 	 * 获取锁<br>
@@ -80,13 +80,4 @@ public interface DistributeLock extends AutoCloseable {
 	 */
 	void unlock() throws Exception;
 
-	/**
-	 * 利用try-with-resource释放资源
-	 *
-	 * @throws Exception
-	 */
-	@Override
-	default void close() throws Exception {
-		unlock();
-	}
 }

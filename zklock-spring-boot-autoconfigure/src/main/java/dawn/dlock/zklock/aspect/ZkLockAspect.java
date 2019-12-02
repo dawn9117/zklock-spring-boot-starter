@@ -14,7 +14,7 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.core.annotation.Order;
 
 import java.lang.reflect.Method;
 import java.util.List;
@@ -25,8 +25,8 @@ import java.util.StringJoiner;
  * @created 2019-11-28 10:27
  */
 @Slf4j
+@Order(0)
 @Aspect
-@Component
 public class ZkLockAspect {
 
 	@Autowired
@@ -46,24 +46,22 @@ public class ZkLockAspect {
 		LockInfo info = buildLockInfo(joinPoint);
 		try {
 			// 加锁
-			info.setIsLocked(lockHelper.lock(info));
-
+			Boolean isLocked = lockHelper.lock(info);
 			// 加锁异常, 执行失败策略
-			if (!info.getIsLocked()) {
-				info.setIsLocked(doFailed(info));
+			if (BooleanUtils.isNotTrue(isLocked)) {
+				isLocked = doFailed(info);
 			}
-
 			// 依然未加锁成功, 直接抛出异常
-			if (BooleanUtils.isNotTrue(info.getIsLocked())) {
+			if (BooleanUtils.isNotTrue(isLocked)) {
 				throw new ZkLockException(String.format("[Zklock] lock failed, lockName:%s", info.getLockName()));
 			}
-
 			// 加锁成功
 			log.info("[ZkLock] locked lockName:{}", info.getLockName());
 			return joinPoint.proceed();
 		} finally {
 			if (info.getLock() != null) {
 				info.getLock().unlock();
+				log.info("[ZkLock] released lock lockName:{}", info.getLockName());
 			}
 		}
 	}
@@ -75,7 +73,6 @@ public class ZkLockAspect {
 		String path = zkLock.path();
 		if (StringUtils.isBlank(path)) {
 			StringJoiner joiner = new StringJoiner(delimiter);
-			joiner.add(lockHelper.getZkConfig().getLockNamespace());
 			joiner.add(method.getDeclaringClass().getCanonicalName());
 			joiner.add(method.getName());
 			path = StringUtils.prependIfMissing(joiner.toString(), delimiter, delimiter);

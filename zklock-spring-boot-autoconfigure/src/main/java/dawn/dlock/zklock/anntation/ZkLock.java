@@ -71,11 +71,11 @@ public @interface ZkLock {
 
 	/**
 	 * 获取锁超时时间:
-	 * 默认5分钟(300秒)
+	 * 默认30秒
 	 *
 	 * @return 获取锁超时时间
 	 */
-	long timeout() default 300000;
+	long timeout() default 30000;
 
 	/**
 	 * 获取锁超时时间单位
