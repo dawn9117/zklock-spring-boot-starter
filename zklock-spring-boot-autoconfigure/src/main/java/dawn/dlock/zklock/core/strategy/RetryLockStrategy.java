@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
  * 失败重试策略
  *
  * @author HEBO
- * @created 2019-11-29 11:03
  */
 @Slf4j
 public class RetryLockStrategy implements LockFailedStrategy {

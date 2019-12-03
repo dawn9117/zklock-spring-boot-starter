@@ -9,7 +9,6 @@ import java.io.Serializable;
  * 加锁的方法信息
  *
  * @author HEBO
- * @created 2019-11-29 11:05
  */
 @Data
 public class LockInfo implements Serializable {

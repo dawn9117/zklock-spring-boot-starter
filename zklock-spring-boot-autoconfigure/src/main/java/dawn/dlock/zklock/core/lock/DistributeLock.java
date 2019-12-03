@@ -6,7 +6,6 @@ import java.util.concurrent.TimeUnit;
  * 分布式锁
  *
  * @author he.bo
- * @created 2019-11-28 14:27
  */
 public interface DistributeLock {
 
@@ -25,6 +24,8 @@ public interface DistributeLock {
 	 * }
 	 *
 	 * </pre>
+	 *
+	 * @throws Exception
 	 */
 	void lock() throws Exception;
 
@@ -46,6 +47,8 @@ public interface DistributeLock {
 	 * }
 	 *
 	 * </pre>
+	 *
+	 * @throws Exception
 	 */
 	boolean tryLock() throws Exception;
 
@@ -71,12 +74,14 @@ public interface DistributeLock {
 	 *
 	 * @param time 等待获取锁最大的时间
 	 * @param unit 等待获取锁最大的时间单位
-	 * @return
+	 * @return boolean
 	 */
 	boolean tryLock(long time, TimeUnit unit) throws Exception;
 
 	/**
 	 * 释放锁,与lock(),tryLock()成对使用
+	 *
+	 * @throws Exception
 	 */
 	void unlock() throws Exception;
 

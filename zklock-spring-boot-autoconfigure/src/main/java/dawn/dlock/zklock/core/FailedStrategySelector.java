@@ -10,7 +10,6 @@ import org.springframework.core.type.AnnotationMetadata;
  * 失败策略注册器
  *
  * @author HEBO
- * @created 2019-12-02 11:01
  */
 public class FailedStrategySelector implements ImportSelector {
 

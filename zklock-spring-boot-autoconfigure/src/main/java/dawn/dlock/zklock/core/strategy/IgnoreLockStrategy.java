@@ -7,7 +7,6 @@ import lombok.extern.slf4j.Slf4j;
  * 失败重试策略
  *
  * @author HEBO
- * @created 2019-11-29 11:03
  */
 @Slf4j
 public class IgnoreLockStrategy implements LockFailedStrategy {

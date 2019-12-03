@@ -14,7 +14,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  * zk.session.timeout=30000
  *
  * @author HEBO
- * @created 2019-11-28 10:14
  */
 @Getter
 @Setter

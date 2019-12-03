@@ -6,7 +6,6 @@ import dawn.dlock.zklock.core.lock.LockInfo;
  * 默认加锁失败策略
  *
  * @author HEBO
- * @created 2019-11-29 11:03
  */
 public class DefaultFailedStrategy implements LockFailedStrategy {
 
