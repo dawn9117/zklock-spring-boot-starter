@@ -32,10 +32,10 @@ step1. 在pom.xml中引入依赖：
 ```
 
 step2. 在application.properties中添加以下配置
-* zk.registryAddress=XXX:2181, desc:(required)
-* zk.session-timeout=XXX,  desc:(optional, default: 30000)
-* zk.connect-timeout=XXX,  desc:(optional, default: 30000)
-* zk.lock-namespace=XXX,   desc:(optional, default: locks)
+* zk.registryAddress=XXX:2181, (required)
+* zk.sessionTimeout=XXX,  (optional, default: 30000)
+* zk.connectTimeout=XXX,  (optional, default: 30000)
+* zk.lockNamespace=XXX,   (optional, default: locks)
 
 step3. 在需要加分布式锁的方法上增加@ZkLock注解
 ``` java
