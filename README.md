@@ -14,12 +14,12 @@ GitHub：https://github.com/dawn9117/zklock-spring-boot-starter
 
 ##### 小工具一枚，欢迎使用和Star支持，如使用过程中碰到问题，可以提出Issue，我会尽力完善该Starter
 
-###版本基础
+##### 版本基础
 * spring-boot-starter-parent: 2.1.9.RELEASE
 * curator-recipes：2.8.0
 * fastjson: 1.2.62
 
-###如何使用
+##### 如何使用
 在该项目的帮助下，我们的Spring Boot可以轻松的引入zk分布式锁，主需要做下面两个步骤：
 
 step1. 在pom.xml中引入依赖：
