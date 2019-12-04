@@ -45,14 +45,14 @@ public void test(){
 }
 ```
 
-##### 锁说明: 默认情况下使用不可重入共享锁, 锁名称为: zk.lock-namespace + 类全路径 + 方法名, 例如: /locks/com.github.dawn/test。
+##### 锁说明: 默认情况下使用不可重入共享锁, 锁名称为: zk.lock-namespace + 类全路径 + 方法名, 例如: /locks/com.github.dawn.LockService/test。
 
 ##### 原理: 使用spring aop对添加@ZkLock注解的方法进行环绕处理, 处理逻辑:
 * step1.加锁
     * 成功执行下一步
     * 失败执行失败策略
 * step2. 执行方法
-    * 加锁失败直接抛出异常
+    * 加锁失败并且执行失败策略返回false则直接抛出异常
     * 加锁成功执行连接的方法
 * step3. 释放锁
 
