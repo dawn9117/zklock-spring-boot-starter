@@ -6,9 +6,9 @@
     <groupId>com.github.dawn9117</groupId>
     <artifactId>zklock-spring-boot</artifactId>
     <packaging>pom</packaging>
-    <version>1.0.1</version>
-    <name>zklock-spring-boot-starter</name>
-    <description>zklock-spring-boot-starter</description>
+    <version>1.0.2</version>
+    <name>zklock-spring-boot</name>
+    <description>zklock-spring-boot</description>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
