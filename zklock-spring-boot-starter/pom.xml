@@ -5,7 +5,7 @@
     <parent>
         <groupId>com.github.dawn9117</groupId>
         <artifactId>zklock-spring-boot</artifactId>
-        <version>1.0.3</version>
+        <version>1.0.5</version>
     </parent>
     <artifactId>zklock-spring-boot-starter</artifactId>
     <name>zklock-spring-boot-starter</name>

@@ -6,7 +6,7 @@
     <groupId>com.github.dawn9117</groupId>
     <artifactId>zklock-spring-boot</artifactId>
     <packaging>pom</packaging>
-    <version>1.0.3</version>
+    <version>1.0.5</version>
     <name>zklock-spring-boot</name>
     <description>zklock-spring-boot</description>
 
@@ -28,6 +28,10 @@
         <commons.collection4.version>4.3</commons.collection4.version>
         <fastjson.version>1.2.62</fastjson.version>
         <commons.lang3>3.9</commons.lang3>
+        <maven.source.plugin>3.1.0</maven.source.plugin>
+        <maven.javadoc.plugin>3.1.0</maven.javadoc.plugin>
+        <maven.gpg.plugin>1.6</maven.gpg.plugin>
+
     </properties>
 
     <dependencyManagement>
@@ -79,8 +83,10 @@
     </licenses>
 
     <scm>
-        <url>https://github.com/dawn9117/zklock-spring-boot-starter</url>
-        <connection>https://github.com/dawn9117/zklock-spring-boot-starter.git</connection>
+        <connection>scm:git:https://github.com/dawn9117/zklock-spring-boot-starter.git</connection>
+        <developerConnection>scm:git:https://github.com/dawn9117/zklock-spring-boot-starter.git</developerConnection>
+        <url>https://github.com/ThierrySquirrel/network-spring-boot-starter</url>
+        <tag>v${project.version}</tag>
     </scm>
 
     <developers>
@@ -105,7 +111,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-source-plugin</artifactId>
-                        <version>2.2.1</version>
+                        <version>${maven.source.plugin}</version>
                         <executions>
                             <execution>
                                 <phase>package</phase>
@@ -118,7 +124,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-javadoc-plugin</artifactId>
-                        <version>3.0.1</version>
+                        <version>${maven.javadoc.plugin}</version>
                         <executions>
                             <execution>
                                 <phase>package</phase>
@@ -131,7 +137,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
-                        <version>1.6</version>
+                        <version>${maven.gpg.plugin}</version>
                         <executions>
                             <execution>
                                 <phase>verify</phase>

@@ -14,7 +14,14 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.LocalVariableTableParameterNameDiscoverer;
+import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.core.annotation.Order;
+import org.springframework.expression.EvaluationContext;
+import org.springframework.expression.ExpressionParser;
+import org.springframework.expression.spel.standard.SpelExpressionParser;
+import org.springframework.expression.spel.support.StandardEvaluationContext;
+import org.springframework.util.Assert;
 
 import java.lang.reflect.Method;
 import java.util.List;
@@ -35,6 +42,16 @@ public class ZkLockAspect {
 	private List<LockFailedStrategy> failedStrategies;
 
 	private static final String delimiter = "/";
+
+	/**
+	 * Spel 解析器
+	 */
+	private ExpressionParser parser = new SpelExpressionParser();
+
+	/**
+	 * 本地变量名工具
+	 */
+	private LocalVariableTableParameterNameDiscoverer discoverer = new LocalVariableTableParameterNameDiscoverer();
 
 	@Pointcut("@annotation(dawn.dlock.zklock.anntation.ZkLock)")
 	public void lockPointcut() {
@@ -65,18 +82,43 @@ public class ZkLockAspect {
 		}
 	}
 
-	private LockInfo buildLockInfo(ProceedingJoinPoint point) {
-		MethodSignature signature = (MethodSignature) point.getSignature();
-		Method method = signature.getMethod();
-		ZkLock zkLock = method.getAnnotation(ZkLock.class);
+	/**
+	 * 解析锁相关信息
+	 *
+	 * @param point 连接点
+	 * @return 锁信息
+	 * @throws ZkLockException
+	 */
+	private LockInfo buildLockInfo(ProceedingJoinPoint point) throws ZkLockException {
+		// 获取连接的方法对象
+		Method method = ((MethodSignature) point.getSignature()).getMethod();
+
+		// 必须通过Spring的AnnotationUtils获取ZkLock, 否则@AlisFor无效
+		ZkLock zkLock = AnnotationUtils.findAnnotation(method, ZkLock.class);
+
+		// 获取锁path
 		String path = zkLock.path();
-		if (StringUtils.isBlank(path)) {
+		if (StringUtils.isBlank(path) || StringUtils.startsWith(path, "#")) {
+			// 未自定义path, 前缀为 /lockNamespace/className/methodName
 			StringJoiner joiner = new StringJoiner(delimiter);
 			joiner.add(method.getDeclaringClass().getCanonicalName());
 			joiner.add(method.getName());
-			path = StringUtils.prependIfMissing(joiner.toString(), delimiter, delimiter);
+
+			// 指定path为SPEL, 锁路径规则为: /lockNamespace/className/methodName/SPEL
+			if (StringUtils.startsWith(path, "#")) {
+				String value = parseEl(zkLock.path(), method, point.getArgs());
+				Assert.hasText(value, String.format("[ZkLock] parsed %s, but value is empty, method:%s#%s",
+						zkLock.path(), method.getDeclaringClass().getName(), method.getName()));
+
+				joiner.add(value);
+			}
+			path = joiner.toString();
 		}
 
+		// 在path首位添加/
+		path = StringUtils.prependIfMissing(path, delimiter, delimiter);
+
+		// 构建锁信息
 		LockInfo info = new LockInfo();
 		info.setIsLocked(false);
 		info.setLockName(path);
@@ -84,6 +126,13 @@ public class ZkLockAspect {
 		return info;
 	}
 
+	/**
+	 * 执行失败策略
+	 *
+	 * @param info 锁信息
+	 * @return 执行结果
+	 * @throws Throwable
+	 */
 	private Boolean doFailed(LockInfo info) throws Throwable {
 		try {
 			Class<? extends LockFailedStrategy> failedStrategy = info.getZkLock().failedStrategy();
@@ -99,5 +148,21 @@ public class ZkLockAspect {
 		return false;
 	}
 
+	/**
+	 * @param el     表达式
+	 * @param method 方法
+	 * @param args   方法参数
+	 * @return
+	 * @description 解析spring EL表达式
+	 */
+	private String parseEl(String el, Method method, Object[] args) throws ZkLockException {
+		Assert.notEmpty(args, String.format("[ZkLock] parse %s failed, method:%s#%s", el, method.getDeclaringClass().getName(), method.getName()));
+		String[] params = discoverer.getParameterNames(method);
+		EvaluationContext context = new StandardEvaluationContext();
+		for (int i = 0; i < params.length; i++) {
+			context.setVariable(params[i], args[i]);
+		}
+		return parser.parseExpression(el).getValue(context, String.class);
+	}
 
 }

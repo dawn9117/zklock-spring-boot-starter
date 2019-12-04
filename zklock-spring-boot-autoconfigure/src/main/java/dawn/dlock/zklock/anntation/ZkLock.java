@@ -6,6 +6,7 @@ import dawn.dlock.zklock.core.lock.ZkSemaphoreMutexLock;
 import dawn.dlock.zklock.core.strategy.DefaultFailedStrategy;
 import dawn.dlock.zklock.core.strategy.LockFailedStrategy;
 import dawn.dlock.zklock.core.strategy.RetryLockStrategy;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.annotation.AliasFor;
 
 import java.lang.annotation.*;
@@ -28,7 +29,7 @@ public @interface ZkLock {
 	 * @return 锁路径
 	 */
 	@AliasFor("value")
-	String path() default "";
+	String path() default StringUtils.EMPTY;
 
 	/**
 	 * zk锁路径
@@ -36,7 +37,7 @@ public @interface ZkLock {
 	 * @return 锁路径
 	 */
 	@AliasFor("path")
-	String value() default "";
+	String value() default StringUtils.EMPTY;
 
 	/**
 	 * 锁类型:
