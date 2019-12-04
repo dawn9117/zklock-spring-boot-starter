@@ -65,7 +65,7 @@ public void test(){
 
 #### 锁说明: 默认使用不可重入共享锁, 规则如下: 
 * 未指定Path: zk.lock-namespace + 类全路径 + 方法名, 例如 @ZkLock: /locks/com.github.dawn.LockService/test
-* 指定SPEL: zk.lock-namespace + 类全路径 + 方法名 + SPEL, 例如 @ZkLock("#{params1}"): /locks/com.github.dawn.LockService/test/解析Spel得到的值
+* 指定SPEL: zk.lock-namespace + 类全路径 + 方法名 + SPEL, 例如 @ZkLock("#param1"): /locks/com.github.dawn.LockService/test/解析#param1得到的值
 * 指定path: zk.lock-namespace + path, 例如 @ZkLock("/1000"): /locks/1000 
 
 ##### 原理: 使用spring aop对添加@ZkLock注解的方法进行环绕处理, 处理逻辑:
