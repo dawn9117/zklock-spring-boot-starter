@@ -36,6 +36,24 @@ step2. 在application.properties中添加以下配置
 * zk.sessionTimeout=XXX,  (session超时时间: optional, default: 30000)
 * zk.connectTimeout=XXX,  (connect超时时间: optional, default: 30000)
 * zk.lockNamespace=XXX,   (zk锁根路径: optional, default: locks)
+<br/><br/>
+
+如果配置文件中已经有zookeeper的配置,但是key不适用于该插件的话, 也可以使用以下方式配置: 
+``` java
+@Configuration
+public class AppConfig {
+
+	@Value("${XXX}")
+	private String zkAddress;
+
+	@Bean
+	public ZkConfig zkConfig() {
+		ZkConfig config = new ZkConfig();
+		config.setRegistryAddress(zkAddress);
+		return config;
+	}
+}
+```
 
 step3. 在需要加分布式锁的方法上增加@ZkLock注解
 ``` java

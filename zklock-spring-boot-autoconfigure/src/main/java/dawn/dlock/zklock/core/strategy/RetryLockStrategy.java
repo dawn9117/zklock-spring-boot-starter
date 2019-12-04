@@ -5,6 +5,8 @@ import dawn.dlock.zklock.core.lock.LockInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * 失败重试策略
  *
@@ -22,6 +24,7 @@ public class RetryLockStrategy implements LockFailedStrategy {
 			if (helper.lock(info)) {
 				return true;
 			}
+			TimeUnit.SECONDS.sleep(1);
 		}
 		return false;
 	}
