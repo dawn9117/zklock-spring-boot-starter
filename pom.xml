@@ -6,7 +6,7 @@
     <groupId>com.github.dawn9117</groupId>
     <artifactId>zklock-spring-boot</artifactId>
     <packaging>pom</packaging>
-    <version>1.0.5</version>
+    <version>1.0.6</version>
     <name>zklock-spring-boot</name>
     <description>zklock-spring-boot</description>
 

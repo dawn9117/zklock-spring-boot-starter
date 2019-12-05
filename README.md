@@ -27,7 +27,7 @@ step1. 在pom.xml中引入依赖：
 <dependency>
   <groupId>com.github.dawn9117</groupId>
   <artifactId>zklock-spring-boot-starter</artifactId>
-  <version>1.0.5</version>
+  <version>${version}</version>
 </dependency>
 ```
 

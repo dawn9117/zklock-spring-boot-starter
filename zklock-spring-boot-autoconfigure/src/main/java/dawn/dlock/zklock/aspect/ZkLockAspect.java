@@ -89,9 +89,10 @@ public class ZkLockAspect {
 	 * @return 锁信息
 	 * @throws ZkLockException
 	 */
-	private LockInfo buildLockInfo(ProceedingJoinPoint point) throws ZkLockException {
+	private LockInfo buildLockInfo(ProceedingJoinPoint point) throws ZkLockException, NoSuchMethodException {
 		// 获取连接的方法对象
-		Method method = ((MethodSignature) point.getSignature()).getMethod();
+		MethodSignature methodSignature = (MethodSignature) point.getSignature();
+		Method method = point.getTarget().getClass().getDeclaredMethod(methodSignature.getName(), methodSignature.getMethod().getParameterTypes());
 
 		// 必须通过Spring的AnnotationUtils获取ZkLock, 否则@AlisFor无效
 		ZkLock zkLock = AnnotationUtils.findAnnotation(method, ZkLock.class);
@@ -119,11 +120,11 @@ public class ZkLockAspect {
 		path = StringUtils.prependIfMissing(path, delimiter, delimiter);
 
 		// 构建锁信息
-		LockInfo info = new LockInfo();
-		info.setIsLocked(false);
-		info.setLockName(path);
-		info.setZkLock(zkLock);
-		return info;
+		return LockInfo.builder()
+				.isLocked(false)
+				.lockName(path)
+				.zkLock(zkLock)
+				.build();
 	}
 
 	/**

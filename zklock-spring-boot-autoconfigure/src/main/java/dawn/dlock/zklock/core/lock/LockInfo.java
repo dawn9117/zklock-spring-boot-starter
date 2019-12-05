@@ -1,6 +1,7 @@
 package dawn.dlock.zklock.core.lock;
 
 import dawn.dlock.zklock.anntation.ZkLock;
+import lombok.Builder;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -11,6 +12,7 @@ import java.io.Serializable;
  * @author HEBO
  */
 @Data
+@Builder
 public class LockInfo implements Serializable {
 
 	/**
