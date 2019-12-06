@@ -2,7 +2,7 @@ package dawn.dlock.zklock.autoconfigure;
 
 import dawn.dlock.zklock.aspect.ZkLockAspect;
 import dawn.dlock.zklock.config.ZkConfig;
-import dawn.dlock.zklock.core.FailedStrategySelector;
+import dawn.dlock.zklock.core.FailedCompensatorSelector;
 import dawn.dlock.zklock.core.LockHelper;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -17,7 +17,7 @@ import org.springframework.context.annotation.Import;
  * @author hebo
  */
 @Configuration
-@Import({FailedStrategySelector.class, ZkLockAspect.class})
+@Import({FailedCompensatorSelector.class, ZkLockAspect.class})
 @EnableConfigurationProperties(ZkConfig.class)
 public class ZkLockAutoConfiguration {
 

@@ -1,4 +1,4 @@
-package dawn.dlock.zklock.core.strategy;
+package dawn.dlock.zklock.core.compensator;
 
 import dawn.dlock.zklock.core.LockHelper;
 import dawn.dlock.zklock.core.lock.LockInfo;
@@ -8,18 +8,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.concurrent.TimeUnit;
 
 /**
- * 失败重试策略
+ * 失败重试补偿器
  *
  * @author HEBO
  */
 @Slf4j
-public class RetryLockStrategy implements LockFailedStrategy {
+public class RetryLockCompensator implements LockFailedCompensator {
 
 	@Autowired
 	private LockHelper helper;
 
 	@Override
-	public Boolean doFailed(LockInfo info) throws Throwable {
+	public Boolean compensate(LockInfo info) throws Throwable {
 		for (int i = 0; i < info.getZkLock().retry(); i++) {
 			if (helper.lock(info)) {
 				return true;

@@ -6,14 +6,14 @@
     <groupId>com.github.dawn9117</groupId>
     <artifactId>zklock-spring-boot</artifactId>
     <packaging>pom</packaging>
-    <version>1.0.6</version>
+    <version>1.0.7</version>
     <name>zklock-spring-boot</name>
     <description>zklock-spring-boot</description>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.1.9.RELEASE</version>
+        <version>2.2.1.RELEASE</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
@@ -31,7 +31,6 @@
         <maven.source.plugin>3.1.0</maven.source.plugin>
         <maven.javadoc.plugin>3.1.0</maven.javadoc.plugin>
         <maven.gpg.plugin>1.6</maven.gpg.plugin>
-
     </properties>
 
     <dependencyManagement>
@@ -85,7 +84,7 @@
     <scm>
         <connection>scm:git:https://github.com/dawn9117/zklock-spring-boot-starter.git</connection>
         <developerConnection>scm:git:https://github.com/dawn9117/zklock-spring-boot-starter.git</developerConnection>
-        <url>https://github.com/ThierrySquirrel/network-spring-boot-starter</url>
+        <url>https://github.com/dawn9117/zklock-spring-boot-starter</url>
         <tag>v${project.version}</tag>
     </scm>
 

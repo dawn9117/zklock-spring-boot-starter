@@ -3,7 +3,7 @@ package dawn.dlock.zklock.aspect;
 import dawn.dlock.zklock.anntation.ZkLock;
 import dawn.dlock.zklock.core.LockHelper;
 import dawn.dlock.zklock.core.lock.LockInfo;
-import dawn.dlock.zklock.core.strategy.LockFailedStrategy;
+import dawn.dlock.zklock.core.compensator.LockFailedCompensator;
 import dawn.dlock.zklock.exception.ZkLockException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.BooleanUtils;
@@ -39,7 +39,7 @@ public class ZkLockAspect {
 	private LockHelper lockHelper;
 
 	@Autowired
-	private List<LockFailedStrategy> failedStrategies;
+	private List<LockFailedCompensator> failedCompensates;
 
 	private static final String delimiter = "/";
 
@@ -63,11 +63,11 @@ public class ZkLockAspect {
 		try {
 			// 加锁
 			Boolean isLocked = lockHelper.lock(info);
-			// 加锁异常, 执行失败策略
+			// 加锁异常, 执行失败补偿
 			if (BooleanUtils.isNotTrue(isLocked)) {
 				isLocked = doFailed(info);
 			}
-			// 依然未加锁成功, 直接抛出异常
+			// 失败补偿执行返回false, 直接抛出异常
 			if (BooleanUtils.isNotTrue(isLocked)) {
 				throw new ZkLockException(String.format("[Zklock] lock failed, lockName:%s", info.getLockName()));
 			}
@@ -128,7 +128,7 @@ public class ZkLockAspect {
 	}
 
 	/**
-	 * 执行失败策略
+	 * 执行失败补偿
 	 *
 	 * @param info 锁信息
 	 * @return 执行结果
@@ -136,15 +136,15 @@ public class ZkLockAspect {
 	 */
 	private Boolean doFailed(LockInfo info) throws Throwable {
 		try {
-			Class<? extends LockFailedStrategy> failedStrategy = info.getZkLock().failedStrategy();
-			for (LockFailedStrategy strategy : failedStrategies) {
-				if (strategy.getClass().equals(failedStrategy)) {
-					return strategy.doFailed(info);
+			Class<? extends LockFailedCompensator> failedCompensates = info.getZkLock().compensator();
+			for (LockFailedCompensator compensator : this.failedCompensates) {
+				if (compensator.getClass().equals(failedCompensates)) {
+					return compensator.compensate(info);
 				}
 			}
-			log.warn("Zklock nonsupport LockFailedStrategy: {}, please check or change your config", info.getZkLock().failedStrategy().getCanonicalName());
+			log.warn("Zklock nonsupport LockFailedCompensator: {}, please check or change your config", info.getZkLock().compensator().getCanonicalName());
 		} catch (Exception e) {
-			log.warn("Zklock invoke LockFailedStrategy: {} exception", info.getZkLock().failedStrategy().getCanonicalName(), e);
+			log.warn("Zklock invoke LockFailedCompensator: {} exception", info.getZkLock().compensator().getCanonicalName(), e);
 		}
 		return false;
 	}

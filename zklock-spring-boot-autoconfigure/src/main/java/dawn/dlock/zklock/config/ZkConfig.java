@@ -8,10 +8,10 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  * zk配置
  * <p>
  * ##### 分布式锁zk配置 #####
- * zk.registry.address=zk:2181
- * zk.lock.namespace=locks
- * zk.connect.timeout=30000
- * zk.session.timeout=30000
+ * zk.registry-address=zk:2181
+ * zk.lock-namespace=locks
+ * zk.connect-timeout=30000
+ * zk.session-timeout=30000
  *
  * @author HEBO
  */

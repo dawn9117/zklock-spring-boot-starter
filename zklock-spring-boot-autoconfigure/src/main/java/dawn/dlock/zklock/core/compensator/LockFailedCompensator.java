@@ -1,13 +1,13 @@
-package dawn.dlock.zklock.core.strategy;
+package dawn.dlock.zklock.core.compensator;
 
 import dawn.dlock.zklock.core.lock.LockInfo;
 
 /**
- * 加锁失败策略
+ * 加锁失败补偿器
  *
  * @author HEBO
  */
-public interface LockFailedStrategy {
+public interface LockFailedCompensator {
 
 	/**
 	 * 加锁失败会调用该方法:
@@ -17,6 +17,6 @@ public interface LockFailedStrategy {
 	 * @return
 	 * @throws Throwable
 	 */
-	Boolean doFailed(LockInfo lockInfo) throws Throwable;
+	Boolean compensate(LockInfo lockInfo) throws Throwable;
 
 }

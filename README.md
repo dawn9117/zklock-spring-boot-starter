@@ -1,4 +1,4 @@
-# zklock-spring-boot-starter
+# zookeeper分布式锁starter
 
 ### 特别提示: 
 ZK客户端连接超时时间和@ZkLock的timeout受限于zookeeper(zkServer)服务端使用的配置属性, 请根据实际需求修改zk服务端启动配置:<br/>
@@ -18,6 +18,8 @@ GitHub：https://github.com/dawn9117/zklock-spring-boot-starter
 * spring-boot-starter-parent: 2.1.9.RELEASE
 * curator-recipes：2.8.0
 * fastjson: 1.2.62
+* commons-collections4: 4.3
+* commons.lang3: 3.9
 
 ### 如何使用
 在该项目的帮助下，我们的Spring Boot可以轻松的引入zk分布式锁，主需要做下面两个步骤：
@@ -32,10 +34,10 @@ step1. 在pom.xml中引入依赖：
 ```
 
 step2. 在application.properties中添加以下配置
-* zk.registryAddress=XXX:2181, (zk地址: required)
-* zk.sessionTimeout=XXX,  (session超时时间: optional, default: 30000)
-* zk.connectTimeout=XXX,  (connect超时时间: optional, default: 30000)
-* zk.lockNamespace=XXX,   (zk锁根路径: optional, default: locks)
+* zk.registry-address=XXX:2181, (zk地址: required)
+* zk.session-timeout=XXX,  (session超时时间: optional, default: 30000)
+* zk.connect-timeout=XXX,  (connect超时时间: optional, default: 30000)
+* zk.lock-namespace=XXX,   (zk锁根路径: optional, default: locks)
 <br/><br/>
 
 如果配置文件中已经有zookeeper的配置,但是key不适用于该插件的话, 也可以使用以下方式配置: 
@@ -64,23 +66,23 @@ public void test(){
 ```
 
 #### 锁说明: 默认使用不可重入共享锁, 规则如下: 
-* 未指定Path: zk.lock-namespace + 类全路径 + 方法名, 例如 @ZkLock: /locks/com.github.dawn.LockService/test
-* 指定SPEL: zk.lock-namespace + 类全路径 + 方法名 + SPEL, 例如 @ZkLock("#param1"): /locks/com.github.dawn.LockService/test/解析#param1得到的值
+* 未指定Path: zk.lock-namespace + 类全路径 + 方法名, 例如 @ZkLock: /locks/com.github.dawn.UserService/add
 * 指定path: zk.lock-namespace + path, 例如 @ZkLock("/1000"): /locks/1000 
+* SPEL: zk.lock-namespace + 类全路径 + 方法名 + SPEL, 例如 @ZkLock("#param1"): /locks/com.github.dawn.UserService/add/解析#param1得到的值
 
 ##### 原理: 使用spring aop对添加@ZkLock注解的方法进行环绕处理, 处理逻辑:
 * step1.加锁
     * 成功执行下一步
-    * 失败执行失败策略
+    * 加锁失败, 失败补偿
 * step2. 执行方法
-    * 加锁失败并且执行失败策略返回false则直接抛出异常
+    * 加锁失败并且执行失败补偿返回false则直接抛出异常
     * 加锁成功执行连接的方法
 * step3. 释放锁
 
 #### @ZkLock更细致的配置内容参考如下：
 * path: 自定义锁路径
 * type: 指定锁类型, 可自己拓展(目前支持可重入共享锁, 不可重入共享锁)
-* retry: 配合RetryLockStrategy使用, 失败重试次数
-* failedStrategy: 加锁失败策略, 可自定义, 实现LockFailedStrategy接口
+* retry: 配合RetryLockCompensator使用, 失败重试次数
+* failedCompensator: 加锁失败补偿器, 可自定义, 实现LockFailedCompensator接口
 * timeout: 锁连接超时时长
 * timeuint: 锁连接超时时间单位

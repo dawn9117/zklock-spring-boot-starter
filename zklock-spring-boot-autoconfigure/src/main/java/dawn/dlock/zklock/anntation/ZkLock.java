@@ -1,11 +1,11 @@
 package dawn.dlock.zklock.anntation;
 
+import dawn.dlock.zklock.core.compensator.DefaultFailedCompensator;
+import dawn.dlock.zklock.core.compensator.LockFailedCompensator;
+import dawn.dlock.zklock.core.compensator.RetryLockCompensator;
 import dawn.dlock.zklock.core.lock.DistributeLock;
 import dawn.dlock.zklock.core.lock.ZkSemaphoreLock;
 import dawn.dlock.zklock.core.lock.ZkSemaphoreMutexLock;
-import dawn.dlock.zklock.core.strategy.DefaultFailedStrategy;
-import dawn.dlock.zklock.core.strategy.LockFailedStrategy;
-import dawn.dlock.zklock.core.strategy.RetryLockStrategy;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.annotation.AliasFor;
 
@@ -50,22 +50,21 @@ public @interface ZkLock {
 	Class<? extends DistributeLock> type() default ZkSemaphoreMutexLock.class;
 
 	/**
-	 * 加锁失败策略
-	 * 默认: DefaultLockFailedStrategy
+	 * 加锁失败补偿
 	 *
-	 * @return 失败策略
-	 * @see DefaultFailedStrategy
-	 * @see RetryLockStrategy
+	 * @return 失败补偿
+	 * @see DefaultFailedCompensator 默认
+	 * @see RetryLockCompensator
 	 * @see ZkLock#retry()
 	 */
-	Class<? extends LockFailedStrategy> failedStrategy() default DefaultFailedStrategy.class;
+	Class<? extends LockFailedCompensator> compensator() default DefaultFailedCompensator.class;
 
 	/**
 	 * 获取锁重试次数:
 	 * 默认3次
 	 *
 	 * @return 重试次数
-	 * @see RetryLockStrategy
+	 * @see RetryLockCompensator
 	 */
 	int retry() default 3;
 
