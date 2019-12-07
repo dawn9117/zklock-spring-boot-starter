@@ -34,24 +34,26 @@ step1. 在pom.xml中引入依赖：
 ```
 
 step2. 在application.properties中添加以下配置
-* zk.registry-address=XXX:2181, (zk地址: required)
-* zk.session-timeout=XXX,  (session超时时间: optional, default: 30000)
-* zk.connect-timeout=XXX,  (connect超时时间: optional, default: 30000)
-* zk.lock-namespace=XXX,   (zk锁根路径: optional, default: locks)
+* zklock.enabled=true, (zklock开关 默认true)
+* zklock.zk.registry-address=XXX:2181, (zk地址: required)
+* zklock.zk.lock-namespace=XXX,   (zk锁根路径: optional, 默认: locks)
+* zklock.zk.session-timeout=XXX,  (session超时时间: optional, 默认: 30000)
+* zklock.zk.connect-timeout=XXX,  (connect超时时间: optional, 默认: 30000)
 <br/><br/>
 
 如果配置文件中已经有zookeeper的配置,但是key不适用于该插件的话, 也可以使用以下方式配置: 
 ``` java
 @Configuration
 public class AppConfig {
-
 	@Value("${XXX}")
 	private String zkAddress;
 
 	@Bean
-	public ZkConfig zkConfig() {
-		ZkConfig config = new ZkConfig();
-		config.setRegistryAddress(zkAddress);
+	public LockConfig lockConfig (){
+		LockConfig config = new LockConfig();
+		ZkConfig zkConfig = new ZkConfig();
+		zkConfig.setRegistryAddress(zkAddress);
+		config.setZk(zkConfig);
 		return config;
 	}
 }
@@ -60,8 +62,8 @@ public class AppConfig {
 step3. 在需要加分布式锁的方法上增加@ZkLock注解
 ``` java
 @ZkLock
-public void test(){
-
+public Object test(){
+    return "zklock test";
 }
 ```
 

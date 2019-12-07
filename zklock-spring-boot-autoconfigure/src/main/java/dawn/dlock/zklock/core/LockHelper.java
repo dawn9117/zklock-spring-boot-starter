@@ -5,6 +5,7 @@ import dawn.dlock.zklock.config.ZkConfig;
 import dawn.dlock.zklock.core.lock.DistributeLock;
 import dawn.dlock.zklock.core.lock.LockInfo;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.curator.framework.CuratorFramework;
@@ -12,8 +13,6 @@ import org.apache.curator.framework.CuratorFrameworkFactory;
 import org.apache.curator.retry.RetryNTimes;
 import org.springframework.util.StringUtils;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
 import java.lang.reflect.Constructor;
 
 /**
@@ -26,7 +25,7 @@ public class LockHelper {
 	/**
 	 * ZK配置类
 	 */
-	@Resource
+	@Setter
 	private ZkConfig zkConfig;
 
 	/**
@@ -34,7 +33,6 @@ public class LockHelper {
 	 **/
 	private CuratorFramework client;
 
-	@PostConstruct
 	public void init() {
 		log.info("[ZkDistributeLockFactoryImpl] init zkConfig:{}", JSON.toJSONString(zkConfig));
 		if (StringUtils.isEmpty(zkConfig.getRegistryAddress())) {

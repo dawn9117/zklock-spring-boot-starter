@@ -2,7 +2,6 @@ package dawn.dlock.zklock.config;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
  * zk配置
@@ -17,7 +16,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  */
 @Getter
 @Setter
-@ConfigurationProperties(prefix = "zk")
 public class ZkConfig {
 
 	private String registryAddress;
